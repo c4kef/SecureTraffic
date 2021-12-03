@@ -1,6 +1,7 @@
-﻿using System;
+﻿using STLib.Utils;
+using System;
 using System.Threading.Tasks;
-
+using SQLite;
 namespace STLib
 {
     public class Class1
@@ -14,17 +15,14 @@ namespace STLib
 
         public static string GetAnswer(string question) => (question == "Вопрос") ? "Хорошая АЛЕК" : "Плохая работа АЛЕККК";
 
-        public static void Init()
+        public static async Task Init()
         {
-            Task.Run(async () =>
-            {
-                int i = 0;
-                while (true)
-                {
-                    testEvent?.Invoke($"i is {++i}");
-                    await Task.Delay(100);
-                }
-            });
+            Globals.dataBase = new SQLiteAsyncConnection(@"C:\Users\artem\source\repos\SecureTraffic\identifier.sqlite");
+        }
+
+        public static async Task Test()
+        {
+            Console.WriteLine(await Globals.dataBase.InsertAsync(new Users() { Id = 1, Name = "Artemiy", Password = "Gast" }));
         }
     }
 }
