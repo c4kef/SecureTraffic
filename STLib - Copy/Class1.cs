@@ -18,7 +18,6 @@ namespace STLib
                 while (true)
                 {
                     testEvent?.Invoke($"i is {++i}");
-                    await Task.Delay(100);
                 }
             });
         }
