@@ -10,7 +10,9 @@ namespace STLib
         public static event TestEvent testEvent;
         public delegate void TestEvent(string answer);
 
-        public static string[] GetStrings() => new string[] { "Hello", "World", "!" };
+        public static string[] GetQuestions() => new string[] { "Вопрос", "Вопрос 2", "Вопрос 3" };
+
+        public static string GetAnswer(string question) => (question == "Вопрос") ? "Хорошая АЛЕК" : "Плохая работа АЛЕККК";
 
         public static void Init()
         {
