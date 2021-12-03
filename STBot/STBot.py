@@ -1,4 +1,4 @@
 import clr
-clr.AddReference("System.Windows.Forms")
-from System.Windows.Forms import Form
-
+clr.AddReference("D:\STLib.dll")
+from STLib import Class1
+Class1.Write("Hello world!")
