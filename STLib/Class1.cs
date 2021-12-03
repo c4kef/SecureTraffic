@@ -10,6 +10,8 @@ namespace STLib
         public static event TestEvent testEvent;
         public delegate void TestEvent(string answer);
 
+        public static string[] GetStrings() => new string[] { "Hello", "World", "!" };
+
         public static void Init()
         {
             Task.Run(async () =>
