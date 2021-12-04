@@ -22,6 +22,7 @@ namespace STLib
         public static void Init(string DBPath)
         {
             Globals.dataBase = new SQLiteAsyncConnection(DBPath);
+            Globals.baseStart = (BaseStart.Exists()) ? BaseStart.Load() ?? new BaseStart() : new BaseStart();//Ну тут костыль, зато красиво)
         }
     }
 }
