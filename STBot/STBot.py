@@ -5,30 +5,6 @@ from imports import telebot, clr, telebot, apihelper, Main, Manage
 global currentStep = 0
 global botMessage
 
-@bot.message_handler(commands = ['text'])
-def a1(message):
-        if currentStep == 0:
-            print(message.text)
-            bot.delete_message(botMessage.chat.id, botMessage.message_id)
-            bot.delete_message(message.chat.id, message.message_id)
-            botMessage = bot.send_message(message.chat.id,'Введите пароль')
-            currentStep += 1
-        elif currentStep == 1:
-            print(message.text)
-            bot.delete_message(botMessage.chat.id, botMessage.message_id)
-            bot.delete_message(message.chat.id, message.message_id)
-            botMessage = bot.send_message(message.chat.id,'Успех!')
-            currentStep += 1
-
-def a2(message):
-    l = bot.send_message(message.chat.id,'Введите пароль')
-    @bot.message_handler(content_types='text')
-    def message_reply(message):
-        h = message.text
-        print(h)
-        bot.delete_message(l.chat.id, l.message_id)
-        bot.delete_message(message.chat.id, message.message_id)
-
 @bot.message_handler(commands=[s1])
 def start_message(message):
     keyboard = telebot.types.ReplyKeyboardMarkup(True)
@@ -41,24 +17,20 @@ def start_message(message):
     else:
         botMessage = bot.send_message(message.chat.id,'Введите логин')
 
-            
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@bot.message_handler(content_types='text')
+def a1(message):
+    if currentStep == 0:
+        print(message.text)
+        bot.delete_message(botMessage.chat.id, botMessage.message_id)
+        bot.delete_message(message.chat.id, message.message_id)
+        botMessage = bot.send_message(message.chat.id,'Введите пароль')
+        currentStep += 1
+    elif currentStep == 1:
+        print(message.text)
+        bot.delete_message(botMessage.chat.id, botMessage.message_id)
+        bot.delete_message(message.chat.id, message.message_id)
+        botMessage = bot.send_message(message.chat.id,'Успех!')
+        currentStep += 1
 
 @bot.message_handler(commands = [s3])
 def start_message(message):
@@ -70,7 +42,6 @@ def start_message(message):
     bot.send_message(message.chat.id, text = "Добрый день, выберите задачу:", reply_markup = markup)
     
 
- 
 @bot.callback_query_handler(func = lambda call: True)
 def query_handler(call):
     bot.answer_callback_query(callback_query_id = call.id, text = 'Спасибо за честный ответ!')
@@ -78,7 +49,6 @@ def query_handler(call):
     answer = Main.GetAnswer(call.data)
     bot.send_message(call.message.chat.id, answer)
     bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
-
     
 
 bot.polling()
