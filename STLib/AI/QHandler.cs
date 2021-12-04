@@ -27,11 +27,11 @@ namespace STLib.AI
         /// <summary>
         /// сохраненная структура для дальнейшей обработки на слабости
         /// </summary>
-        private Dictionary<BaseStartStruct, bool> keys;
+        private Dictionary<BaseStartStr, bool> keys;
         /// <summary>
         /// Просто временная переменная
         /// </summary>
-        private BaseStartStruct currentStep;
+        private BaseStartStr currentStep;
 
         private Random random;
 
@@ -43,29 +43,27 @@ namespace STLib.AI
         {
             Id = id;
             random = new Random();
-            keys = new Dictionary<BaseStartStruct, bool>();
+            keys = new Dictionary<BaseStartStr, bool>();
         }
 
         /// <summary>
         /// Получение следующего этапа вопроса
         /// </summary>
         /// <returns>true если еще есть вопросы, false если их не осталось</returns>
-        public async Task<bool> GetStep()
+        public bool GetStep()
         {
-            await Task.Run(() =>
-            {
             again://FIX THAT!!!
                 if (level > Globals.baseStart.maxLevel)
                 {
-                    currentStep = default(BaseStartStruct);
-                    return;
+                    currentStep = null;
+                    goto end;
                 }
 
-                List<BaseStartStruct> steps = new List<BaseStartStruct>();
+                List<BaseStartStr> steps = new List<BaseStartStr>();
                 int maxStep = 0;
 
-                List<BaseStartStruct> datas = Globals.baseStart.instance.FindAll(bss => bss.level == level);
-                foreach (BaseStartStruct data in datas)
+                List<BaseStartStr> datas = Globals.baseStart.instance.FindAll(bss => bss.level == level);
+                foreach (BaseStartStr data in datas)
                     if (data.level == level && data.type != BaseStartTypes.incorrect_answer_gen_mask && data.type != BaseStartTypes.counterquestion)
                         steps.Add(data);
 
@@ -82,9 +80,8 @@ namespace STLib.AI
 
                 if (!currentStep.answerNeeded)
                     ++step;
-            });
-
-            return (currentStep.Equals(default(BaseStartStruct))) ? false : currentStep.answerNeeded;
+            end:
+            return currentStep is null ? false : currentStep.answerNeeded;
         }
 
         /// <summary>
@@ -97,17 +94,14 @@ namespace STLib.AI
         /// Получаем сообщение когда пользователь догадался не отвечать
         /// </summary>
         /// <returns>ответ для вывода</returns>
-        public async Task<string> GetIncorrectMessage()
+        public string GetIncorrectMessage()
         {
-            BaseStartStruct incorrectAnswer = default;
+            BaseStartStr incorrectAnswer = null;
 
-            await Task.Run(() =>
-            {
-                List<BaseStartStruct> datas = Globals.baseStart.instance.FindAll(bss => bss.level == level);
-                foreach (BaseStartStruct data in datas)
+                List<BaseStartStr> datas = Globals.baseStart.instance.FindAll(bss => bss.level == level);
+                foreach (BaseStartStr data in datas)
                     if (data.level == level && data.type == BaseStartTypes.incorrect_answer_gen_mask)
                         incorrectAnswer = data;
-            });
 
             return incorrectAnswer.results[incorrectAnswer.randomResult ? random.Next(0, incorrectAnswer.results.Length - 1) : 0];
         }
@@ -117,21 +111,18 @@ namespace STLib.AI
         /// </summary>
         /// <param name="message">текст полного сообщения</param>
         /// <returns>пустая строка если ничего не найдено, ну а полная если найден ответ на контрвопрос</returns>
-        public async Task<string> GetCounterquestionMessage(string message)
+        public string GetCounterquestionMessage(string message)
         {
-            BaseStartStruct counterquestion = default;
+            BaseStartStr counterquestion = null;
 
-            await Task.Run(() =>
-            {
-                List<BaseStartStruct> datas = Globals.baseStart.instance.FindAll(bss => bss.level == level);
-                foreach (BaseStartStruct data in datas)
+                List<BaseStartStr> datas = Globals.baseStart.instance.FindAll(bss => bss.level == level);
+                foreach (BaseStartStr data in datas)
                     if (data.level == level && data.type == BaseStartTypes.counterquestion)
                         foreach(string keyword in data.keywords)
                             if (message.Contains(keyword))
                                 counterquestion = data;
-            });
 
-            return (counterquestion.Equals(default(BaseStartStruct))) ? string.Empty : counterquestion.results[counterquestion.randomResult ? random.Next(0, counterquestion.results.Length - 1) : 0];
+            return counterquestion is null ? string.Empty : counterquestion.results[counterquestion.randomResult ? random.Next(0, counterquestion.results.Length - 1) : 0];
         }
 
         /// <summary>
@@ -139,7 +130,7 @@ namespace STLib.AI
         /// </summary>
         /// <param name="message">тест полного сообщения</param>
         /// <returns>ответ на поставленный ответ (гениально звучит). Пустая строка значит что ничего нет, ну а строка со значением наоборот</returns>
-        public async Task<string> AddAnswerStep(string message)
+        public string AddAnswerStep(string message)
         {
             bool isFoundContains = false;
             string answer = string.Empty;
@@ -154,10 +145,10 @@ namespace STLib.AI
                     isFoundContains = true;
             }
 
-            string counterquestion = await GetCounterquestionMessage(message);
+            string counterquestion = GetCounterquestionMessage(message);
 
             if (!isFoundContains && string.IsNullOrEmpty(counterquestion))
-                answer = await GetIncorrectMessage();
+                answer = GetIncorrectMessage();
 
             if (answer == string.Empty && !isFoundContains)
                 answer = counterquestion + GetMessageStep();

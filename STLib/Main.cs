@@ -2,6 +2,9 @@
 using System;
 using System.Threading.Tasks;
 using SQLite;
+using System.Reflection;
+using System.IO;
+
 namespace STLib
 {
     public class Main
@@ -22,7 +25,8 @@ namespace STLib
         public static void Init(string DBPath)
         {
             Globals.dataBase = new SQLiteAsyncConnection(DBPath);
-            Globals.baseStart = (BaseStart.Exists()) ? BaseStart.Load() ?? new BaseStart() : new BaseStart();//Ну тут костыль, зато красиво)
+            Globals.baseStart = new BaseStart();
+            Globals.baseStart.Load();
         }
     }
 }
