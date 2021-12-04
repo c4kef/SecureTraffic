@@ -13,12 +13,12 @@ namespace STLib.User
         /// </summary>
         /// <param name="id">id пользователя из Telegram</param>
         /// <returns>вернет true если есть в системе и false если нет</returns>
-        public static async Task<bool> CheckExists(int id)
+        public static async Task<bool> CheckExists(long id)
         {
             if (Globals.dataBase is null)
                 throw new Exception("Вы забыли инциализировать систему");
 
-            var query = Globals.dataBase.Table<Users>().Where(s => s.Id == id);
+            var query = Globals.dataBase.Table<Users>().Where(s => s.Id == (int)id);
 
             var result = await query.ToListAsync();
 
@@ -32,14 +32,14 @@ namespace STLib.User
         /// <param name="name">Имя пользователя</param>
         /// <param name="password">Пароль пользователя</param>
         /// <returns>true если пользователь добавлен успешно и false если нет</returns>
-        public static async Task<bool> Register(int id, string name, string password)
+        public static async Task<bool> Register(long id, string name, string password)
         {
             if (Globals.dataBase is null)
                 throw new Exception("Вы забыли инциализировать систему");
 
             return await Globals.dataBase.InsertAsync(new Users()
             {
-                Id = id,
+                Id = (int)id,
                 Name = name,
                 Password = password
             }) == 1;

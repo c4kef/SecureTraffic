@@ -1,24 +1,27 @@
+from logging import NullHandler
 from telebot.types import Message
 from const import token, n, s1, s3, m
 from imports import telebot, clr, telebot, apihelper, Main, Manage
 
-global currentStep = 0
-global botMessage
+currentStep = 0
+botMessage =  None
+
+token = '2045425760:AAHossESgiQy5DAgtnUse3vDFTyTgkYufGk'
+bot = telebot.TeleBot(token)
 
 @bot.message_handler(commands=[s1])
 def start_message(message):
+    global botMessage
     keyboard = telebot.types.ReplyKeyboardMarkup(True)
     keyboard.row(n)
     bot.send_message(message.chat.id, 'Привет', reply_markup = keyboard)  
     user_id = message.from_user.id
-    print(user_id)
-    if  Manage.CheckExists(user_id) == 'true':
-        print("yj")
-    else:
-        botMessage = bot.send_message(message.chat.id,'Введите логин')
+    botMessage = bot.send_message(message.chat.id,'Введите логин')
 
 @bot.message_handler(content_types='text')
 def a1(message):
+    global currentStep
+    global botMessage
     if currentStep == 0:
         print(message.text)
         bot.delete_message(botMessage.chat.id, botMessage.message_id)
