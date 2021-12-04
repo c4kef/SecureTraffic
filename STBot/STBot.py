@@ -7,23 +7,18 @@ global botMessage
 
 @bot.message_handler(commands = ['text'])
 def a1(message):
-    match currentStep:
-        case 0:
+        if currentStep == 0:
             print(message.text)
             bot.delete_message(botMessage.chat.id, botMessage.message_id)
             bot.delete_message(message.chat.id, message.message_id)
             botMessage = bot.send_message(message.chat.id,'Введите пароль')
             currentStep += 1
-            break
-        case 1:
+        elif currentStep == 1:
             print(message.text)
             bot.delete_message(botMessage.chat.id, botMessage.message_id)
             bot.delete_message(message.chat.id, message.message_id)
             botMessage = bot.send_message(message.chat.id,'Успех!')
-            break
-        case _:        
-            return 0   # 0 is the default case if x is not found
-        
+            currentStep += 1
 
 def a2(message):
     l = bot.send_message(message.chat.id,'Введите пароль')
