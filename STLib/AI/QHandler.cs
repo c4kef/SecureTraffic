@@ -9,14 +9,14 @@ namespace STLib.AI
 {
     public class QHandler
     {
-        private int Id;
+        private long Id;
         private Random random;
         private int step = 0;
         private int level = 0;
         private Dictionary<BaseStartStruct, bool> keys;
         private BaseStartStruct currentStep;
 
-        public QHandler(int id)
+        public QHandler(long id)
         {
             Id = id;
             random = new Random();
