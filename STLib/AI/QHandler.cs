@@ -7,15 +7,38 @@ using STLib.Utils;
 
 namespace STLib.AI
 {
+    /// <summary>
+    /// Класс для регисрации маски пользователя
+    /// </summary>
     public class QHandler
     {
+        /// <summary>
+        /// уникальный идентификатор пользователя в Telegram
+        /// </summary>
         private long Id;
-        private Random random;
+        /// <summary>
+        /// текущий шаг
+        /// </summary>
         private int step = 0;
+        /// <summary>
+        /// текущий уровень
+        /// </summary>
         private int level = 0;
+        /// <summary>
+        /// сохраненная структура для дальнейшей обработки на слабости
+        /// </summary>
         private Dictionary<BaseStartStruct, bool> keys;
+        /// <summary>
+        /// Просто временная переменная
+        /// </summary>
         private BaseStartStruct currentStep;
 
+        private Random random;
+
+        /// <summary>
+        /// Инициализация регистратора
+        /// </summary>
+        /// <param name="id">уникальный идентификатора пользователя в Telegram</param>
         public QHandler(long id)
         {
             Id = id;
@@ -23,6 +46,10 @@ namespace STLib.AI
             keys = new Dictionary<BaseStartStruct, bool>();
         }
 
+        /// <summary>
+        /// Получение следующего этапа вопроса
+        /// </summary>
+        /// <returns>true если еще есть вопросы, false если их не осталось</returns>
         public async Task<bool> GetStep()
         {
             await Task.Run(() =>
@@ -60,8 +87,16 @@ namespace STLib.AI
             return (currentStep.Equals(default(BaseStartStruct))) ? false : currentStep.answerNeeded;
         }
 
+        /// <summary>
+        /// Получение текущего сообщения этапа
+        /// </summary>
+        /// <returns>возвращает сообщение текущего этапа</returns>
         public string GetMessageStep() => currentStep.results[currentStep.randomResult ? random.Next(0, currentStep.results.Length - 1) : 0];
 
+        /// <summary>
+        /// Получаем сообщение когда пользователь догадался не отвечать
+        /// </summary>
+        /// <returns>ответ для вывода</returns>
         public async Task<string> GetIncorrectMessage()
         {
             BaseStartStruct incorrectAnswer = default;
@@ -77,6 +112,11 @@ namespace STLib.AI
             return incorrectAnswer.results[incorrectAnswer.randomResult ? random.Next(0, incorrectAnswer.results.Length - 1) : 0];
         }
 
+        /// <summary>
+        /// Получаем ответ на сообщение в котором содержится вопрос
+        /// </summary>
+        /// <param name="message">текст полного сообщения</param>
+        /// <returns>пустая строка если ничего не найдено, ну а полная если найден ответ на контрвопрос</returns>
         public async Task<string> GetCounterquestionMessage(string message)
         {
             BaseStartStruct counterquestion = default;
@@ -94,6 +134,11 @@ namespace STLib.AI
             return (counterquestion.Equals(default(BaseStartStruct))) ? string.Empty : counterquestion.results[counterquestion.randomResult ? random.Next(0, counterquestion.results.Length - 1) : 0];
         }
 
+        /// <summary>
+        /// Установка ответа на поставленный вопрос ботом
+        /// </summary>
+        /// <param name="message">тест полного сообщения</param>
+        /// <returns>ответ на поставленный ответ (гениально звучит). Пустая строка значит что ничего нет, ну а строка со значением наоборот</returns>
         public async Task<string> AddAnswerStep(string message)
         {
             bool isFoundContains = false;

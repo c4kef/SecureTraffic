@@ -12,9 +12,21 @@ namespace STLib.Utils
 	/// </summary>
 	public enum BaseStartTypes
     {
+		/// <summary>
+		/// приветствие
+		/// </summary>
 		greetings,
+		/// <summary>
+		/// вопросы на генерацию маски
+		/// </summary>
 		gen_mask_question,
+		/// <summary>
+		/// пользователь не ответил на вопрос маски
+		/// </summary>
 		incorrect_answer_gen_mask,
+		/// <summary>
+		/// контрвопрос
+		/// </summary>
 		counterquestion
 	}
 
@@ -23,11 +35,29 @@ namespace STLib.Utils
 	/// </summary>
 	public struct BaseStartStruct
     {
+		/// <summary>
+		/// список возможных ответов
+		/// </summary>
 		public string[] results { get; set; }
+		/// <summary>
+		/// взять случайный ответ из списка?
+		/// </summary>
 		public bool randomResult { get; set; }
+		/// <summary>
+		/// нужен ли встречный ответ?
+		/// </summary>
 		public bool answerNeeded { get; set; }
+		/// <summary>
+		/// тип вопроса
+		/// </summary>
 		public BaseStartTypes type { get; set; }
+		/// <summary>
+		/// уровень вопроса
+		/// </summary>
 		public int level { get; set; }
+		/// <summary>
+		/// ключевые слова для обнаружения
+		/// </summary>
 		public string[] keywords { get; set; }
     }
 
@@ -37,15 +67,31 @@ namespace STLib.Utils
 	[Serializable]
 	public class BaseStart
     {
+		/// <summary>
+		/// Максимальный уровень
+		/// </summary>
 		public int maxLevel { get; set; }
+		/// <summary>
+		/// Список запросов
+		/// </summary>
 		public List<BaseStartStruct> instance { get; set; }
-
+		/// <summary>
+		/// Создание списка
+		/// </summary>
 		public BaseStart() => instance = new List<BaseStartStruct>();
-
+		/// <summary>
+		/// Загрузка образа
+		/// </summary>
+		/// <returns>null если не найден, а так вернет образ BaseStart'а</returns>
 		public static BaseStart? Load() => JsonConvert.DeserializeObject<BaseStart>(File.ReadAllText(@"basestart.json"));
-
+		/// <summary>
+		/// Проверка на существование файла образа
+		/// </summary>
+		/// <returns>true если есть, и false наоборот</returns>
 		public static bool Exists() => File.Exists(@"basestart.json");
-
+		/// <summary>
+		/// Сохраняем наш образ
+		/// </summary>
 		public async void Save() => await File.WriteAllTextAsync(@"basestart.json", JsonConvert.SerializeObject(this, Formatting.Indented));
 	}
 
