@@ -2,14 +2,27 @@ from telebot.types import Message
 from const import token, n, s1, s3, m
 from imports import telebot, clr, telebot, apihelper, Main, Manage
 
+global currentStep = 0
+global botMessage
 
+@bot.message_handler(commands = ['text'])
 def a1(message):
-    l = bot.send_message(message.chat.id,'Введите логин')
-    @bot.message_handler(content_types='text')
-    def message_reply(message):
-        h = message.text
-        print(h)
-
+    match currentStep:
+        case 0:
+            print(message.text)
+            bot.delete_message(botMessage.chat.id, botMessage.message_id)
+            bot.delete_message(message.chat.id, message.message_id)
+            botMessage = bot.send_message(message.chat.id,'Введите пароль')
+            currentStep += 1
+            break
+        case 1:
+            print(message.text)
+            bot.delete_message(botMessage.chat.id, botMessage.message_id)
+            bot.delete_message(message.chat.id, message.message_id)
+            botMessage = bot.send_message(message.chat.id,'Успех!')
+            break
+        case _:        
+            return 0   # 0 is the default case if x is not found
         
 
 def a2(message):
@@ -31,9 +44,7 @@ def start_message(message):
     if  Manage.CheckExists(user_id) == 'true':
         print("yj")
     else:
-        a1(message)
-        bot.register_next_step_handler(message, a2)
-        
+        botMessage = bot.send_message(message.chat.id,'Введите логин')
 
             
             
