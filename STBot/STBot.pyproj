@@ -11,6 +11,8 @@
     <OutputPath>.</OutputPath>
     <Name>STBot</Name>
     <RootNamespace>STBot</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <InterpreterId>Global|PythonCore|3.10</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,6 +26,11 @@
     <Compile Include="const.py" />
     <Compile Include="imports.py" />
     <Compile Include="STBot.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|IronPython|3.4" />
+    <InterpreterReference Include="Global|IronPython|3.4-32" />
+    <InterpreterReference Include="Global|PythonCore|3.10" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

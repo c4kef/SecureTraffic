@@ -13,14 +13,19 @@ namespace STLib.User
         /// </summary>
         /// <param name="id">id пользователя из Telegram</param>
         /// <returns>вернет true если есть в системе и false если нет</returns>
-        public static async Task<bool> CheckExists(long id)
+        public static bool CheckExists(long id)
         {
             if (Globals.dataBase is null)
                 throw new Exception("Вы забыли инциализировать систему");
 
-            var query = Globals.dataBase.Table<Users>().Where(s => s.Id == (int)id);
+            var result = new List<Users>();
 
-            var result = await query.ToListAsync();
+            Task.Run(async () =>
+            {
+                var query = Globals.dataBase.Table<Users>().Where(s => s.Id == (int)id);
+
+                result = await query.ToListAsync();
+            }).Wait();
 
             return result.Count > 0;
         }
@@ -32,17 +37,21 @@ namespace STLib.User
         /// <param name="name">Имя пользователя</param>
         /// <param name="password">Пароль пользователя</param>
         /// <returns>true если пользователь добавлен успешно и false если нет</returns>
-        public static async Task<bool> Register(long id, string name, string password)
+        public static bool Register(long id, string name, string password)
         {
             if (Globals.dataBase is null)
                 throw new Exception("Вы забыли инциализировать систему");
 
-            return await Globals.dataBase.InsertAsync(new Users()
+            bool isSuc = false;
+
+            Task.Run(async () => isSuc = await Globals.dataBase.InsertAsync(new Users()
             {
                 Id = (int)id,
                 Name = name,
                 Password = password
-            }) == 1;
+            }) == 1).Wait();
+
+            return isSuc;
         }
     }
 }

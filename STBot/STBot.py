@@ -9,7 +9,7 @@ from STLib.User import Manage
 from STLib.AI import QHandler
 
 
-Main.Init("D:\Build\Debug\identifier.sqlite") # Иницим либу
+Main.Init("D:\\Build\\Debug\\identifier.sqlite", "D:\\Build\\Debug\\basestart.json") # Иницим либу
 
 API_TOKEN = '2045425760:AAHossESgiQy5DAgtnUse3vDFTyTgkYufGk'
 
@@ -37,20 +37,21 @@ def send_start(message):
     users_dict[user_id].chat_id = message.chat.id
     users_dict[user_id].id = message.from_user.id
     
-    msg = None
-    for _ in range(3):
-        q.GetStep()
-        msg = bot.send_message(users_dict[user_id].chat_id,q.GetMessageStep())
+    if Manage.CheckExists(user_id):
+        bot.send_message(users_dict[user_id].chat_id, "Как дела!")
+    else:
+        msg = None
+        for _ in range(3):
+            q.GetStep()
+            msg = bot.send_message(users_dict[user_id].chat_id,q.GetMessageStep())
 
-    bot.register_next_step_handler(msg, process_qhandler)
+        bot.register_next_step_handler(msg, process_qhandler)
 
 def process_register_step(message):
     user_id = message.from_user.id
     msg = bot.send_message(users_dict[user_id].chat_id, "Мы видим вас впервые, введите логин:")
     users_dict[user_id].auth_message_id.append(msg.message_id)
     bot.register_next_step_handler(msg, process_login_step)
-
-
 
 def process_login_step(message):
     try:
@@ -101,7 +102,7 @@ def process_qhandler(message):
 
             bot.register_next_step_handler(msg, process_qhandler)
         else:
-            process_register_step(msg);
+            process_register_step(message);
 
     except Exception as e:
         bot.send_message(chat_id, f'Неполадки в системе {e}')
