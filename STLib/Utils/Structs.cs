@@ -37,6 +37,7 @@ namespace STLib.Utils
 	[Serializable]
 	public class BaseStart
     {
+		public int maxLevel { get; set; }
 		public List<BaseStartStruct> instance { get; set; }
 
 		public BaseStart() => instance = new List<BaseStartStruct>();

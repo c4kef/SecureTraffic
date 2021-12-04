@@ -28,6 +28,12 @@ namespace STLib.AI
             await Task.Run(() =>
             {
             again://FIX THAT!!!
+                if (level > Globals.baseStart.maxLevel)
+                {
+                    currentStep = default(BaseStartStruct);
+                    return;
+                }
+
                 List<BaseStartStruct> steps = new List<BaseStartStruct>();
                 int maxStep = 0;
 
@@ -51,7 +57,7 @@ namespace STLib.AI
                     ++step;
             });
 
-            return currentStep.answerNeeded;
+            return (currentStep.Equals(default(BaseStartStruct))) ? false : currentStep.answerNeeded;
         }
 
         public string GetMessageStep() => currentStep.results[currentStep.randomResult ? random.Next(0, currentStep.results.Length - 1) : 0];

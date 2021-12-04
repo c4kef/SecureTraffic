@@ -9,10 +9,16 @@ using STLib.User;
 
 namespace CSTBot
 {
+    public enum markers
+    {
+        input_auth_start,
+        input_login,
+        input_password
+    }
+
     public class Handlers
     {
-        private static int step = -1;
-        private static bool isAuth = false;
+        private static markers step;
         private static List<Message> messages = new List<Message>();
 
         public static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
@@ -72,32 +78,14 @@ namespace CSTBot
             };
             Message sentMessage = await action;
             Console.WriteLine($"The message was sent with id: {sentMessage.MessageId}");
-            
-
-            static async Task<Message> StartBot(ITelegramBotClient botClient, Message message)
-            {
-                if (!await Manage.CheckExists(message.From.Id))
-                {
-                    step = 0;
-                    isAuth = true;
-                    var ret = await botClient.SendTextMessageAsync(chatId: message.Chat.Id, text: "Давайте пройдем регистрацию!", replyMarkup: new ReplyKeyboardRemove());
-                    return await StepAuth(botClient, message);
-                }
-                else
-                    return await botClient.SendTextMessageAsync(chatId: message.Chat.Id, text: "Ты уже есть в системе", replyMarkup: new ReplyKeyboardRemove());
-            }
 
             static async Task<Message> HandlerMessages(ITelegramBotClient botClient, Message message)
             {
-                if (!await Manage.CheckExists(message.From.Id) && !isAuth)
+                if (!await Manage.CheckExists(message.From.Id))
                 {
-                    step = 0;
-                    isAuth = true;
                     var ret = await botClient.SendTextMessageAsync(chatId: message.Chat.Id, text: "Давайте пройдем регистрацию!", replyMarkup: new ReplyKeyboardRemove());
                     return await StepAuth(botClient, message);
                 }
-                else if (isAuth)
-                    return await StepAuth(botClient, message);
                 else
                     return await botClient.SendTextMessageAsync(chatId: message.Chat.Id, text: step++.ToString(), replyMarkup: new ReplyKeyboardRemove());
             }
@@ -107,23 +95,22 @@ namespace CSTBot
                 Message retVal;
                 switch (step)
                 {
-                    case 0:
+                    case markers.input_auth_start:
                         messages.Add(retVal = await botClient.SendTextMessageAsync(chatId: message.Chat.Id, text: "Введите логин:", replyMarkup: new ReplyKeyboardRemove()));
-                        step++;
+                        step = markers.input_login;
                         return retVal;
-                    case 1:
+                    case markers.input_login:
                         messages.Add(retVal = message);
-                        step++;
+                        step = markers.input_password;
                         messages.Add(await botClient.SendTextMessageAsync(chatId: message.Chat.Id, text: "Введите пароль:", replyMarkup: new ReplyKeyboardRemove()));
                         return retVal;
-                    case 2:
+                    case markers.input_password:
                         messages.Add(retVal = message);
                         retVal = await botClient.SendTextMessageAsync(chatId: message.Chat.Id, text: (await Manage.Register(messages[1].Chat.Id, messages[1].Text, messages[3].Text)) ? "Успех!" : "Ошибка регистрации!", replyMarkup: new ReplyKeyboardRemove());
                         for (int i = 0; i < messages.Count; i++)
                             await botClient.DeleteMessageAsync(chatId: messages[i].Chat.Id, messageId: messages[i].MessageId);
 
                         messages.Clear();
-                        isAuth = false;
                         return retVal;
                     default:
                         return null;

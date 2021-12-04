@@ -19,3 +19,4 @@ while(await q.GetStep())
     string a = await q.AddAnswerStep(Console.ReadLine());
     Console.WriteLine(a);
 }
+Console.WriteLine("конец!");
