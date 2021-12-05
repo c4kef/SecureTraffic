@@ -96,7 +96,7 @@ def process_pass_step(message):
         users_dict[user_id].auth_message_id.append(message.message_id)
         users_dict[user_id].password = message.text
 
-        request = Manage.Register(user_id, users_dict[user_id].login, users_dict[user_id].password)
+        request = Manage.Register(user_id, users_dict[user_id].login, users_dict[user_id].password, users_dict[user_id].qhandler.EndSetup())
 
         for message_id in users_dict[user_id].auth_message_id:
             bot.delete_message(users_dict[user_id].chat_id, message_id, 0.2)

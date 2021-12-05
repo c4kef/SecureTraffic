@@ -103,9 +103,8 @@ namespace STLib.AI
 
             Task.Run(() =>
             {
-                List<BaseStartStruct> datas = Globals.baseStart.instance.FindAll(bss => bss.level == level);
-                foreach (BaseStartStruct data in datas)
-                    if (data.level == level && data.type == BaseStartTypes.incorrect_answer_gen_mask)
+                foreach (BaseStartStruct data in Globals.baseStart.instance)
+                    if (data.type == BaseStartTypes.incorrect_answer_gen_mask)
                         incorrectAnswer = data;
             }).Wait();
 
@@ -174,17 +173,24 @@ namespace STLib.AI
         /// <summary>
         /// Окончание настройки уровня пользователя
         /// </summary>
-        public void EndSetup()
+        public int EndSetup()
         {
             int maxCount = keys.Count;
             int correctCount = 0;
 
-            foreach(var key in keys)
+            foreach (var key in keys)
                 if (key.Value)
                     correctCount++;
 
-            int percent = (correctCount * 100) / maxCount;
-            //TO-DO сча получу инфу от льва и добавляем обработку процентов
+            float percent = (correctCount * 100f) / maxCount;
+            if (percent >= 70)
+                percent = 1;
+            else if (percent >= 50)
+                percent = 2;
+            else if (percent >= 0)
+                percent = 3;
+
+            return (int)Math.Floor(percent);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace STLib.User
         /// <param name="name">Имя пользователя</param>
         /// <param name="password">Пароль пользователя</param>
         /// <returns>true если пользователь добавлен успешно и false если нет</returns>
-        public static bool Register(long id, string name, string password)
+        public static bool Register(long id, string name, string password, int lvl)
         {
             if (Globals.dataBase is null)
                 throw new Exception("Вы забыли инциализировать систему");
@@ -49,7 +49,7 @@ namespace STLib.User
                 Id = (int)id,
                 Name = name,
                 Password = password,
-                low_level = 0,
+                low_level = lvl,
                 passed_learning = ""
             }) == 1).Wait();
 
