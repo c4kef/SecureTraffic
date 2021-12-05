@@ -170,5 +170,21 @@ namespace STLib.AI
             }).Wait();
             return answer;
         }
+
+        /// <summary>
+        /// Окончание настройки уровня пользователя
+        /// </summary>
+        public void EndSetup()
+        {
+            int maxCount = keys.Count;
+            int correctCount = 0;
+
+            foreach(var key in keys)
+                if (key.Value)
+                    correctCount++;
+
+            int percent = (correctCount * 100) / maxCount;
+            //TO-DO сча получу инфу от льва и добавляем обработку процентов
+        }
     }
 }

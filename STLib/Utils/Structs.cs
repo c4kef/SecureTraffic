@@ -88,7 +88,7 @@ namespace STLib.Utils
 	}
 
 	/// <summary>
-	///Образ таблицы пользователей (для добавления и создания) 
+	/// Образ таблицы пользователей (для добавления и создания) 
 	/// </summary>
 	public class Users
 	{
@@ -107,5 +107,55 @@ namespace STLib.Utils
 		/// </summary>
 		[NotNull]
 		public string Password { get; set; }
+		/// <summary>
+		/// Пройденное обучение
+		/// </summary>
+		public string passed_learning { get; set; }
+		/// <summary>
+		/// Уровень слабости
+		/// </summary>
+		public int low_level { get; set; }
+	}
+
+	/// <summary>
+	/// Структура вопросов в материале
+	/// </summary>
+	public struct LContentMaterial
+	{
+		/// <summary>
+		/// Вопрос на который будет дан ответ пользователем
+		/// </summary>
+		public string question { get; set; }
+		/// <summary>
+		/// Предлагаемый выбор ответов
+		/// </summary>
+		public string[] answers { get; set; }
+		/// <summary>
+		/// Да-нет ссылочку на обложку изображения
+		/// </summary>
+		public string? urlCover { get; set; }
+		/// <summary>
+		/// Верный ответ
+		/// </summary>
+		public string correctAnswer { get; set; }
+	}
+
+	/// <summary>
+	/// Подготовленный материал для обучения пользователя
+	/// </summary>
+	public class LMaterial
+	{
+		/// <summary>
+		/// Загаловок материала
+		/// </summary>
+		public string title {get; set; }
+		/// <summary>
+		/// Уровень материала
+		/// </summary>
+		public int level { get; set; }
+		/// <summary>
+		/// Контент задания
+		/// </summary>
+		public List<LContentMaterial> content { get; set; }
 	}
 }

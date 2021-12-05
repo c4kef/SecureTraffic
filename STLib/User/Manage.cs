@@ -48,7 +48,9 @@ namespace STLib.User
             {
                 Id = (int)id,
                 Name = name,
-                Password = password
+                Password = password,
+                low_level = 0,
+                passed_learning = ""
             }) == 1).Wait();
 
             return isSuc;
