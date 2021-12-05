@@ -45,7 +45,7 @@ namespace STLib.AI
             foreach (var dir in Directory.GetFiles(@"D:\Build\Debug\LMaterials"))
                 materials.Add(File.ReadAllText(dir).FromJson<LMaterial>());
         }
-
+        
         /// <summary>
         /// Получение списка рекомендаций
         /// </summary>
@@ -57,12 +57,9 @@ namespace STLib.AI
             var user = Globals.dataBase.QueryAsync<Users>($"SELECT * FROM Users WHERE Id = {Id}").Result[0];
 
             foreach (LMaterial material in materials)
-            {
-                Console.Write(material.level);
-                File.WriteAllText(@"D:\Build\Debug\test.json", material.ToJson());
                 if (material.level <= user.low_level)
                     result.Add(material);
-            }
+
             return result.ToJson();
         }
 
@@ -143,6 +140,11 @@ namespace STLib.AI
             ++step;
 
             return isCorrectAnswer;
+        }
+
+        public string GetAnswer()
+        {
+            return currentTest.content[step].incorrectAnswer;
         }
     }
 }

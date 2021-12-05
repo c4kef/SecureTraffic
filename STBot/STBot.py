@@ -12,7 +12,7 @@ from STLib.AI import LHandler
 
 Main.Init("C:\\Users\\artem\\source\\repos\\SecureTraffic\\identifier.sqlite", "D:\\Build\\Debug\\basestart.json") # Иницим либу
 
-API_TOKEN = '2045425760:AAHossESgiQy5DAgtnUse3vDFTyTgkYufGk'
+API_TOKEN = '5009698325:AAEmCTAFBABFyAPf-1NyKwEHGIBcU9P2ChA'
 
 bot = telebot.TeleBot(API_TOKEN)
 
@@ -117,7 +117,7 @@ def answer_for_button(call):
     chat_id = users_dict[user_id].chat_id
     if users_dict[user_id].lhandler.SelectTest(call.data) == 0:
         answer = users_dict[user_id].lhandler.CheckAnswer(call.data)
-        bot.send_message(users_dict[user_id].chat_id, "Отлично" if answer else "Плохо")
+        bot.send_message(users_dict[user_id].chat_id, "Отлично" if answer else users_dict[user_id].lhandler.GetAnswer())
    
     bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=None)
     

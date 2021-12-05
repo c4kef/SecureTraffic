@@ -134,6 +134,7 @@ namespace STLib.Utils
 		/// Да-нет ссылочку на обложку изображения
 		/// </summary>
 		public string? urlCover { get; set; }
+		public string incorrectAnswer { get; set; }
 		/// <summary>
 		/// Верный ответ
 		/// </summary>
