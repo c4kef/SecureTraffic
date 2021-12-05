@@ -144,7 +144,7 @@ namespace STLib.AI
 
         public string GetAnswer()
         {
-            return currentTest.content[step].incorrectAnswer;
+            return currentTest.content[step - 1].incorrectAnswer;//костыль
         }
     }
 }
